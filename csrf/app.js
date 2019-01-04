@@ -22,7 +22,14 @@ app.use(koaBody());
  * csrf middleware
  */
 
-app.use(new CSRF());
+app.use(new CSRF({
+  invalidSessionSecretMessage: 'Invalid session secret',
+  invalidSessionSecretStatusCode: 403,
+  invalidTokenMessage: 'Invalid CSRF token',
+  invalidTokenStatusCode: 403,
+  excludedMethods: [ 'GET', 'HEAD', 'OPTIONS' ],
+  disableQuery: false
+}));
 
 /**
  * route
@@ -34,7 +41,16 @@ router.get('/token', token)
 app.use(router.routes());
 
 async function token(ctx) {
-  ctx.body = ctx.csrf;
+  ctx.type = 'html';
+  ctx.body = `<p>${ctx.headers.cookie}</p>
+              <p>${ctx.method}</p>
+              <form action="/post" method="POST">
+                <input type="hidden" name="_csrf" value="${ctx.csrf}" />
+                <input type="email" name="email" placeholder="Email" />
+                <input type="password" name="password" placeholder="Password" />
+                <button type="submit">Register</button>
+              </form>
+              <h2>${ctx.csrf}</h2>`;
 }
 
 async function post(ctx) {

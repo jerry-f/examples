@@ -1,8 +1,10 @@
 
-const render = require('./lib/render');
+// const render = require('./lib/render');
 const logger = require('koa-logger');
 const router = require('koa-router')();
 const koaBody = require('koa-body');
+const views = require('koa-views');
+const path = require('path');
 
 const Koa = require('koa');
 const app = module.exports = new Koa();
@@ -15,7 +17,12 @@ const posts = [];
 
 app.use(logger());
 
-app.use(render);
+app.use(views(path.resolve(__dirname, './views/'), {
+  map: {
+    html: 'swig'
+  }
+}));
+// app.use(render);
 
 app.use(koaBody());
 
@@ -60,6 +67,7 @@ async function show(ctx) {
  */
 
 async function create(ctx) {
+  console.log(ctx.request.body);
   const post = ctx.request.body;
   const id = posts.push(post) - 1;
   post.created_at = new Date();
