@@ -3,7 +3,9 @@ const fs = require('fs');
 const app = module.exports = new Koa();
 const path = require('path');
 const extname = path.extname;
+// console.log('path.extname:', path.extname);
 
+console.log('extname');
 // try GET /app.js
 
 app.use(async function(ctx) {
@@ -11,6 +13,7 @@ app.use(async function(ctx) {
   const fstat = await stat(fpath);
 
   if (fstat.isFile()) {
+    console.log('fpath', extname(fpath));
     ctx.type = extname(fpath);
     ctx.body = fs.createReadStream(fpath);
   }
@@ -21,7 +24,6 @@ if (!module.parent) app.listen(3000);
 /**
  * thunkify stat
  */
-
 function stat(file) {
   return new Promise(function(resolve, reject) {
     fs.stat(file, function(err, stat) {

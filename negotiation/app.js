@@ -34,6 +34,7 @@ app.use(async function(ctx, next) {
   // Check which type is best match by giving
   // a list of acceptable types to `req.accepts()`.
   const type = ctx.accepts('json', 'html', 'xml', 'text');
+  console.log('ctx.accepts:', ctx.accepts('json', 'html', 'xml', 'text'));
 
   // not acceptable
   if (type === false) ctx.throw(406);

@@ -17,17 +17,20 @@ app.use(koaBody({ multipart: true }));
 
 app.use(async function(ctx) {
   // create a temporary folder to store files
-  const tmpdir = path.join(os.tmpdir(), uid());
+  const tmpdir = path.join(os.tmpdir(), uid()); // 默认临时文件目录.
+  console.log('tmpdir', tmpdir);
 
   // make the temporary directory
   await fs.mkdir(tmpdir);
   const filePaths = [];
+  console.log('ctx.request.body:', ctx.request.body);
   const files = ctx.request.body.files || {};
+  // console.log(files, Object.keys(files));
 
   for (let key in files) {
     const file = files[key];
     const filePath = path.join(tmpdir, file.name);
-    const reader = fs.createReadStream(file.path);
+    const reader = fs.createReadStream(file.path); // 读取上传的文件
     const writer = fs.createWriteStream(filePath);
     reader.pipe(writer);
     filePaths.push(filePath);

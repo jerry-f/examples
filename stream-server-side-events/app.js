@@ -3,10 +3,11 @@ const app = module.exports = new Koa();
 
 const sse = require('./sse');
 const db = require('./db');
-
+/* 没搞懂 */
 app.use(async function(ctx) {
   // otherwise node will automatically close this connection in 2 minutes
   ctx.req.setTimeout(Number.MAX_VALUE);
+  // ctx.req.setTimeout(5000);
 
   ctx.type = 'text/event-stream; charset=utf-8';
   ctx.set('Cache-Control', 'no-cache');

@@ -9,6 +9,7 @@ app.use(async function(ctx, next) {
   } catch (err) {
     // some errors will have .status
     // however this is not a guarantee
+    console.log('err:', err);
     ctx.status = err.status || 500;
     ctx.type = 'html';
     ctx.body = '<p>Something <em>exploded</em>, please contact Maru.</p>';
@@ -23,8 +24,18 @@ app.use(async function(ctx, next) {
 
 // response
 
-app.use(async function() {
-  throw new Error('boom boom');
+app.use(async function(ctx) {
+  // ctx.throw(404, '有问题的404');
+  // ctx.throw(400, 'name required');
+  ctx.throw(401, 'access_denied', { user: 'jerry' });
+  /*
+  等价于：
+    const err = new Error('name required');
+    err.status = 400;
+    err.expose = true;
+    throw err;
+   */
+  // throw new Error('boom boom');
 });
 
 // error handler
@@ -32,7 +43,7 @@ app.use(async function() {
 app.on('error', function(err) {
   if (process.env.NODE_ENV != 'test') {
     console.log('sent error %s to the cloud', err.message);
-    console.log(err);
+    // console.log(err);
   }
 });
 

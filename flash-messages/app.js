@@ -19,7 +19,7 @@ app.use(async function(ctx, next) {
   // get any messages saved in the session
   const messages = ctx.session.messages || [];
   ctx.body = messages;
-
+  console.log(ctx.body);
   // delete the messages as they've been deliverd
   delete ctx.session.messages;
 });
